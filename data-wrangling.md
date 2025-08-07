@@ -1,25 +1,20 @@
 
-<p align="center">
-  <a href="https://skills.network" target="_blank">
-    <img src="https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/assets/logos/SN_web_lightmode.png" width="200" alt="Skills Network Logo" />
-  </a>
-</p>
+# **Data Wrangling**
 
-# **Data Wrangling Report**
-
-This document describes the data wrangling steps I performed to prepare raw survey data for analysis. The process involved cleaning, standardizing, encoding, imputing missing values, and transforming the data to make it suitable for further exploration and modeling.
+This document describes the data wrangling steps I performed to prepare raw survey data for analysis. The process involved cleaning, standardizing, imputing missing values, and transforming the data to make it suitable for further exploration and modeling.
 
 ---
 
 ## 1. Loaded the Dataset
 
-I started by importing the necessary libraries and loading the dataset using a direct URL.
+I started by importing the necessary libraries and loading the dataset using a direct URL. I used pandas for data manipulation and matplotlib for data visualization.
+I loaded a public Stack Overflow developer survey dataset from a URL and previewed the first few rows to confirm it loaded correctly.
 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
-dataset_url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/n01PQ9pSmiRX6520flujwQ/survey-data.csv"
+dataset_url = "data/survey-data.csv"
 df = pd.read_csv(dataset_url)
 print(df.head())
 ```
@@ -28,7 +23,8 @@ print(df.head())
 
 ## 2. Explored the Dataset
 
-I explored the dataset to understand its structure and check for missing values.
+I explored the dataset by examining the shape, data types, and missing values  to understand its structure and quality of the dataset.
+Then I generated summary statistics to learn more about the distributions of numerical features.
 
 ```python
 print(df.shape)
@@ -42,10 +38,12 @@ df.describe()
 
 ## 3. Identified and Removed Inconsistencies
 
-I removed duplicates and handled inconsistencies in the `Country` column.
+To ensure accuracy, I identified and removed duplicate rows and cleaned up inconsistent values in the Country column.
+There were no duplicates.
 
 ```python
 print(f"Number of duplicate rows: {df.duplicated().sum()}")
+
 df = df.dropna(subset=['Country'])
 
 country_dict = {
@@ -71,19 +69,10 @@ df['EdLevel'] = df['EdLevel'].replace(educ_dict)
 
 ---
 
-## 4. Encoded Categorical Variables
 
-I encoded the `Employment` column using one-hot encoding.
+## 4. Handled Missing Values
 
-```python
-df_encoded = pd.get_dummies(df, columns=['Employment'], prefix='Employment')
-```
-
----
-
-## 5. Handled Missing Values
-
-I identified the columns with the most missing values.
+I identified the columns with the most missing values and applied appropriate imputation techniques.
 
 ```python
 missing_values = df.isnull().sum().sort_values(ascending=False).head(10)
@@ -91,7 +80,9 @@ print(missing_values)
 ```
 
 Then I imputed missing values in numerical and categorical columns.
-
+- For numerical columns (e.g., WorkExp), I filled missing values with the mean.
+- For categorical columns (e.g., RemoteWork), I used the mode.
+  
 ```python
 # Numeric (WorkExp)
 mean_exp = round(df['WorkExp'].mean(), 2)
@@ -104,9 +95,10 @@ df['RemoteWork'] = df['RemoteWork'].fillna(most_frequent_value)
 
 ---
 
-## 6. Feature Scaling and Transformation
+## 5. Feature Scaling and Transformation
 
-I used Min-Max scaling and log transformation on the `ConvertedCompYearly` column.
+To normalize the ConvertedCompYearly column, I applied Min-Max scaling.
+To reduce skewness, I log-transformed the same column:
 
 ```python
 df_cleaned = df.dropna(subset=['ConvertedCompYearly'])
@@ -121,7 +113,7 @@ import numpy as np
 df_cleaned['ConvertedCompYearly_Log'] = np.log(df_cleaned['ConvertedCompYearly'])
 ```
 
-I visualized the effect of the log transformation.
+I also visualized both versions to compare distributions:
 
 ```python
 plt.figure(figsize=(12, 6))
@@ -134,7 +126,7 @@ plt.show()
 
 ---
 
-## 7. Feature Engineering
+## 6. Feature Engineering
 
 I created a new column `ExperienceLevel` based on `YearsCodePro` to categorize professionals by experience.
 
@@ -153,17 +145,3 @@ def assign_experience_level(years):
 
 df_cleaned['ExperienceLevel'] = df_cleaned['YearsCodePro'].apply(assign_experience_level)
 ```
-
----
-
-## ✅ Summary
-
-- Loaded and explored survey data.
-- Cleaned inconsistent and missing values.
-- Encoded categorical features for analysis.
-- Scaled and transformed numerical values.
-- Engineered new features to extract more value from the dataset.
-
----
-
-_This project demonstrates my ability to prepare messy real-world data for insightful analysis. Feel free to explore the code and reach out with questions or suggestions!_
