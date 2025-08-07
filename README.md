@@ -33,10 +33,11 @@ and those they wish to work with in the future
 - **Google Looker Studio**
 ---
 
-## 🔍 Data Cleaning & Preparation
+## 🔍 [Data Cleaning & Preparation](data-wrangling.md)
 - Removed null values and duplicates
 - Transformation of key columns for detailed analysis
 - Converted date formats
+
 
 
 ---
