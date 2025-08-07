@@ -2,12 +2,9 @@
 
 ## Project Overview
 
-In this project, I worked with a simulated Jobs API to collect data on job postings for various technologies and locations. The goal was to extract relevant information from a JSON API and store the results in an Excel spreadsheet using Python.
+In this project, I worked with a simulated Jobs API (as a part of a study capstone project) to collect data on job postings for various technologies and locations. The dataset comes from the source: https://www.kaggle.com/promptcloud/jobs-on-naukricom under a **Public Domain license**. The goal was to extract relevant information from a JSON API and store the results in an Excel spreadsheet using Python.
 
----
-
-## 🧠 Objectives
-
+What I did:
 - Collected job data using a public Jobs API.
 - Parsed JSON responses to extract job counts.
 - Created and saved an Excel file with the results using `openpyxl`.
@@ -17,12 +14,12 @@ In this project, I worked with a simulated Jobs API to collect data on job posti
 ## ⚙️ Steps Performed
 
 ### 1. Accessed the Jobs API
-Used Python's `requests` module to fetch job data in JSON format from a provided API endpoint.
+I used Python's `requests` module to fetch job data in JSON format from a provided API endpoint.
 
 ```python
 import requests
 
-api_url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/labs/module%201/Accessing%20Data%20Using%20APIs/jobs.json"
+api_url = "https://***/***/jobs.json"  # simulated API
 response = requests.get(api_url)
 data = response.json()
 ```
@@ -30,7 +27,7 @@ data = response.json()
 ---
 
 ### 2. Parsed Job Data by Technology
-Created a function to count the number of jobs for a given technology.
+I created a function to count the number of jobs for a given technology.
 
 ```python
 def get_number_of_jobs_T(technology):
@@ -52,7 +49,7 @@ get_number_of_jobs_T("Python")
 ---
 
 ### 3. Parsed Job Data by Location
-Wrote a function to extract the number of job postings by location.
+I wrote a function to extract the number of job postings by location.
 
 ```python
 def get_number_of_jobs_L(location):
@@ -93,7 +90,7 @@ for tech in technologies:
     technology, num_jobs = get_number_of_jobs_T(tech)
     ws.append([technology, num_jobs])
 
-wb.save("job-postings2.xlsx")
+wb.save("job-postings.xlsx")
 wb.close()
 ```
 
@@ -101,4 +98,4 @@ wb.close()
 
 ## 📁 Output
 
-- **job-postings2.xlsx**: Excel file containing job counts for each technology.
+- **job-postings.xlsx**: Excel file containing job counts for each technology.
