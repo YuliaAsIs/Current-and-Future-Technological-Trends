@@ -1,7 +1,7 @@
-# Web Scraping Project
+# Web Scraping 
 
 ## Overview
-In this project, I extracted structured data from a webpage and saved it into a CSV file for further analysis. The goal was to scrape the **name of the programming language** and the **average annual salary** from a given HTML table.
+This document describes how I extracted structured data from a webpage and saved it into a CSV file for further analysis. The goal was to scrape the **name of the programming language** and the **average annual salary** from a given HTML table.
 
 ---
 
@@ -10,9 +10,9 @@ In this project, I extracted structured data from a webpage and saved it into a 
 ### 1. **Analyzed the target webpage**
 I first examined the page structure of the provided URL to understand the HTML layout and locate the target table containing the data.
 
-**URL used:**
+**URL used is the part of the study capstone project:**
 ```python
-url = "https://cf-courses-data.s3.us.cloud-object-storage.appdomain.cloud/IBM-DA0321EN-SkillsNetwork/labs/datasets/Programming_Languages.html"
+url = "https://***/***/Programming_Languages.html"
 ```
 
 ---
@@ -77,4 +77,3 @@ The resulting `popular-languages.csv` file contains two columns:
 - **Language name**
 - **Average annual salary**
 
-This process demonstrates the ability to collect structured data from HTML pages and transform it into a usable format.
