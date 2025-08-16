@@ -42,7 +42,7 @@ and those they wish to work with in the future
 
 ---
 
-## 📈 Analysis Performed
+## 📈 [Analysis Performed](data-analysis.md)
 - Current trends in programming languages, databases, platforms, and frameworks.
 - Future trends in programming languages, databases, platforms, and frameworks.
 - Demographics: Respondents' age, education, and country.
