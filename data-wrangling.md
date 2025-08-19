@@ -7,16 +7,28 @@ This document describes the data wrangling steps I performed to prepare raw surv
 
 ## 1. Loaded the Dataset
 
-I started by importing the necessary libraries and loading the dataset using a direct URL. I used pandas for data manipulation and matplotlib for data visualization.
+I started by importing the necessary libraries and loading the dataset. I used pandas for data manipulation and matplotlib for data visualization.
 I loaded a public Stack Overflow developer survey dataset from a URL and previewed the first few rows to confirm it loaded correctly.
 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
 
-dataset_url = "data/survey-data.csv"
-df = pd.read_csv(dataset_url)
-print(df.head())
+# Load the dataset from local disk
+
+import zipfile
+
+# Path to your ZIP file
+zip_path = "survey_data.zip"
+csv_filename = "survey_data.csv"  # name of the CSV inside the ZIP
+
+# Open the ZIP and read the CSV directly
+with zipfile.ZipFile(zip_path) as z:
+    with z.open(csv_filename) as f:
+        df = pd.read_csv(f)
+
+# Display the first few rows to understand the structure of the data
+df.head()
 ```
 
 ---
@@ -38,13 +50,11 @@ df.describe()
 
 ## 3. Identified and Removed Inconsistencies
 
-To ensure accuracy, I identified and removed duplicate rows and cleaned up inconsistent values in the Country column.
+To ensure accuracy, I checked if there are duplicate rows and cleaned up inconsistent values in the Country column.
 There were no duplicates.
 
 ```python
 print(f"Number of duplicate rows: {df.duplicated().sum()}")
-
-df = df.dropna(subset=['Country'])
 
 country_dict = {
     'United States of America': 'USA',
@@ -101,16 +111,20 @@ To normalize the ConvertedCompYearly column, I applied Min-Max scaling.
 To reduce skewness, I log-transformed the same column:
 
 ```python
-df_cleaned = df.dropna(subset=['ConvertedCompYearly'])
-min_value = df_cleaned['ConvertedCompYearly'].min()
-max_value = df_cleaned['ConvertedCompYearly'].max()
+# Created a new dataset
+df_normalazed_comp = df[df['ConvertedCompYearly'].notnull()].copy()
 
-df_cleaned['ConvertedCompYearly_MinMax'] = (
-    (df_cleaned['ConvertedCompYearly'] - min_value) / (max_value - min_value)
-)
+# Normalozing Min-Max
+min_value = df_normalazed_comp['ConvertedCompYearly'].min()
+max_value = df_normalazed_comp['ConvertedCompYearly'].max()
+
+# Added a new column 'ConvertedCompYearly_MinMax'
+df_normalazed_comp['ConvertedCompYearly_MinMax'] = (
+    (df_normalazed_comp['ConvertedCompYearly'] - min_value) / (max_value - min_value) )
 
 import numpy as np
-df_cleaned['ConvertedCompYearly_Log'] = np.log(df_cleaned['ConvertedCompYearly'])
+# Added a new column 'ConvertedCompYearly_Log'
+df_normalazed_comp['ConvertedCompYearly_Log'] = np.log(df_normalazed_comp['ConvertedCompYearly'])
 ```
 
 I also visualized both versions to compare distributions:
@@ -118,9 +132,9 @@ I also visualized both versions to compare distributions:
 ```python
 plt.figure(figsize=(12, 6))
 plt.subplot(1, 2, 1)
-df_cleaned['ConvertedCompYearly'].plot(kind='hist', bins=10, title='Original Data')
+df_normalazed_comp['ConvertedCompYearly'].plot(kind='hist', bins=10, title='Original Data')
 plt.subplot(1, 2, 2)
-df_cleaned['ConvertedCompYearly_Log'].plot(kind='hist', bins=10, title='Log-Transformed Data')
+df_normalazed_comp['ConvertedCompYearly_Log'].plot(kind='hist', bins=10, title='Log-Transformed Data')
 plt.show()
 ```
 
@@ -131,8 +145,8 @@ plt.show()
 I created a new column `ExperienceLevel` based on `YearsCodePro` to categorize professionals by experience.
 
 ```python
-df_cleaned['YearsCodePro'] = pd.to_numeric(df_cleaned['YearsCodePro'], errors='coerce')
-
+df_normalazed_comp['YearsCodePro'] = pd.to_numeric(df_normalazed_comp['YearsCodePro'], errors='coerce')
+# Function to assign Experience Level based on YearsCodePro
 def assign_experience_level(years):
     if pd.isna(years):  
         return 'Unknown'
@@ -143,5 +157,5 @@ def assign_experience_level(years):
     else:
         return 'Advanced'
 
-df_cleaned['ExperienceLevel'] = df_cleaned['YearsCodePro'].apply(assign_experience_level)
+df_normalazed_comp['ExperienceLevel'] = df_normalazed_comp['YearsCodePro'].apply(assign_experience_level)
 ```
