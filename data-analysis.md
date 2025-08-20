@@ -6,36 +6,25 @@ programming languages, databases, platforms, and web frameworks.
 
 ------------------------------------------------------------------------
 
-## Load the Survey Data
-
-``` python
-import pandas as pd
-
-# Load the survey data from the provided URL
-df = pd.read_csv(URL)
-```
-
-------------------------------------------------------------------------
-
 ## 1. Programming Languages (Current Trends)
 
 ``` python
 # Keep rows with non-null programming language data
-lang = df.dropna(subset=['LanguageHaveWorkedWith'])
-lang.shape
+lang_current = df.dropna(subset=['LanguageHaveWorkedWith'])
+print(lang.shape)
 
 # Split multiple languages per respondent
-lang['LanguageHaveWorkedWith'] = lang['LanguageHaveWorkedWith'].str.split(';')
+lang_current.loc[:, 'LanguageHaveWorkedWith'] = lang_current['LanguageHaveWorkedWith'].str.split(';')
 
 # Flatten into rows
-lang_exploded = lang.explode('LanguageHaveWorkedWith')
+lang_exploded = lang_current.explode('LanguageHaveWorkedWith')
 
 # Get top 10 most common languages
 top_10_lang = lang_exploded['LanguageHaveWorkedWith'].value_counts().head(10)
 
 # Convert to DataFrame and save to CSV
-top_10_lang_df = top_10_lang.to_frame(name='LanguageCount')
-top_10_lang_df.to_csv("Dash1_top_10_lang.csv", index=False)
+top_10_lang_current = top_10_lang.to_frame(name='LanguageCount')
+top_10_lang_current.to_csv("Dash1_top_10_lang.csv", index=False)
 ```
 
 ------------------------------------------------------------------------
@@ -44,20 +33,20 @@ top_10_lang_df.to_csv("Dash1_top_10_lang.csv", index=False)
 
 ``` python
 # Keep rows with non-null database info
-db1 = df.dropna(subset=['DatabaseHaveWorkedWith'])
+db_current = df.dropna(subset=['DatabaseHaveWorkedWith'])
 
 # Split multiple databases per respondent
-db1['DatabaseHaveWorkedWith'] = db1['DatabaseHaveWorkedWith'].str.split(';')
+db_current.loc[:,'DatabaseHaveWorkedWith'] = db_current['DatabaseHaveWorkedWith'].str.split(';')
 
 # Flatten into rows
-db1_exploded = db1.explode('DatabaseHaveWorkedWith')
+db_exploded = db_current.explode('DatabaseHaveWorkedWith')
 
 # Get top 10 most common databases
-top_10_databases = db1_exploded['DatabaseHaveWorkedWith'].value_counts().head(10)
+top_10_databases = db_exploded['DatabaseHaveWorkedWith'].value_counts().head(10)
 
 # Convert to DataFrame and save
-top_10_databases_df = top_10_databases.to_frame(name='Count')
-top_10_databases_df.to_csv("Dash1_top_10_DB.csv", index=False)
+top_10_databases_current = top_10_databases.to_frame(name='Count')
+top_10_databases_current.to_csv("Dash1_top_10_DB.csv", index=False)
 ```
 
 ------------------------------------------------------------------------
@@ -66,20 +55,20 @@ top_10_databases_df.to_csv("Dash1_top_10_DB.csv", index=False)
 
 ``` python
 # Keep rows with non-null platform info
-platf = df.dropna(subset=['PlatformHaveWorkedWith'])
+platf_current = df.dropna(subset=['PlatformHaveWorkedWith'])
 
 # Split multiple platforms per respondent
-platf['PlatformHaveWorkedWith'] = platf['PlatformHaveWorkedWith'].str.split(';')
+platf_current.loc[:,'PlatformHaveWorkedWith'] = platf_current['PlatformHaveWorkedWith'].str.split(';')
 
 # Flatten into rows
-platf_exploded = platf.explode('PlatformHaveWorkedWith')
+platf_exploded = platf_current.explode('PlatformHaveWorkedWith')
 
 # Get top 10 platforms
 top_10_platf = platf_exploded['PlatformHaveWorkedWith'].value_counts().head(10)
 
 # Convert to DataFrame and save
-top_10_platf_df = top_10_platf.to_frame(name='Count')
-top_10_platf_df.to_csv("Dash1_top_10_platf.csv", index=False)
+top_10_platf_current = top_10_platf.to_frame(name='Count')
+top_10_platf_current.to_csv("Dash1_top_10_platf.csv", index=False)
 ```
 
 ------------------------------------------------------------------------
@@ -116,6 +105,37 @@ following fields:
 -   Platforms → `PlatformWantToWorkWith`\
 -   Web frameworks → `WebframeWantToWorkWith`
 
+``` python
+# Fields to process
+fields = [
+    "LanguageWantToWorkWith",
+    "DatabaseWantToWorkWith",
+    "PlatformWantToWorkWith",
+    "WebframeWantToWorkWith"
+]
+
+# Loop through each field
+for field in fields:
+    # Keep rows with non-null values
+    temp = df.dropna(subset=[field]).copy()
+    
+    # Split multiple values (assuming ';' separator)
+    temp[field] = temp[field].str.split(';')
+    
+    # Flatten into rows
+    temp_exploded = temp.explode(field)
+    
+    # Get top 10 items
+    top_10 = temp_exploded[field].value_counts().head(10)
+    
+    # Convert to DataFrame
+    top_10_future = top_10.to_frame(name="Count").reset_index()
+    top_10_future.rename(columns={"index": field}, inplace=True)
+    
+    # Save to CSV (dynamic filename)
+    filename = f"Dash2_top_10_{field[:-14].lower()}.csv"
+    top_10_future.to_csv(filename, index=False)
+```
 ------------------------------------------------------------------------
 
 ## Comparing Current vs. Future Programming Languages
