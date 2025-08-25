@@ -1,6 +1,10 @@
 # Current-and-Future-Technological-Trends
 Data Analysis Project
 
+[GitHub repository](https://github.com/YuliaAsIs/Current-and-Future-Technological-Trends)
+
+
+
 ## 🧠 Objective
 Analyze the data and obtain valuable insights into current and future technological trends using the latest
 Stack Overflow Developer Survey dataset. These insights will play a key role in guiding
@@ -51,13 +55,21 @@ and those they wish to work with in the future
 ---
 
 ## 📊 Key Visualizations
-- Dashboard 1: Current Technology Usage
-- Dashboard 2: Future Technology Usage
-- Dashboard 3: Demographics
-- Chart 1: Programming Language Trends
-- Chart 2: Job Postings
-- Chart 3: Average annual Salary($) by Language
-- Chart 4: Operating System Trends
+- Dashboard 1:
+  ![Current Technology Usage](images/CurrentTechnologyUsage.png)
+- Dashboard 2:
+  ![Future Technology Usage](images/FutureTechnologyTrends.png)
+- Dashboard 3:
+  ![Demographics](images/Demographics.png)
+- Chart 1:
+  ![Programming Language Trends](images/Compare_languages.png)
+  
+- Chart 2:
+  ![Job Postings](images/NumJobPosts.png)
+- Chart 3:
+  ![Average annual Salary($) by Language](images/SalaryByLanguage.png)
+- Chart 4:
+  ![Operating System Trends](images/OS.png)
 
 ---
 
@@ -67,18 +79,6 @@ and those they wish to work with in the future
 - Strong preference for modern frameworks like React and Node.js, with growing interest in Next.js 
 - AWS leads as the most desired platform for cloud services, reflecting its market dominance
 - Most respondents are 24-35 years old, concentrated in North America and Europe, and are Bachelor's degree holders 
-
-
-
----
-
-## 📎 Files in this Repo
-| File | Description |
-|------|-------------|
-| `.ipynb` | Jupyter Notebook with full analysis |
-| `.csv` | Cleaned dataset |
-| `dashboard.pbix` | Power BI Dashboard file |
-| `charts/` | Folder containing exported chart images |
 
 ---
 
